@@ -1,0 +1,19 @@
+html,
+body,
+#map {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+}
+
+.location {
+  z-index: 10;
+  width: 300px;
+  top : 15px;
+  left : 25px;
+  position:absolute;
+}
+
+.location > input {
+  width : inherit;
+}
