@@ -1,3 +1,32 @@
+function FoursquareAPI() {
+
+
+  this.clientId = "4ZKYMPQ4P0S3NA2JW1ACCJV1IFWEOCEWMRPNQILFFX5VLBS2";
+  this.clientSecret = "05EAWPEOHRYCHGUF53J3KW5EJ545R3U1D1GFRHJFEWAD4VUC";
+  this.baseUrl = "https://api.foursquare.com/v2/venues/search?ll={{lat}},{{lng}}&client_id=" 
+                 + this.clientId + "&client_secret=" + this.clientSecret + "&v=20150404";
+  this.getPlaces = function(location,successCallbackFunc,errorCallbackFunc) {
+  var endpoint = this.baseUrl
+                   .replace(/{{lat}}/g,location.coords.lat)
+                   .replace(/{{lng}}/g,location.coords.lng);
+  console.log(endpoint);
+  $.get(endpoint)
+    .done(function(data) {
+      var meta = data.meta;
+      if(meta.code == 200) {
+        successCallbackFunc(data.response['venues']);
+      }else {
+        errorCallbackFunc({errorType: meta.errorType, errorDetail: meta.errorDetail});
+      }
+
+    })
+    .fail(function() {
+      errorCallbackFunc('Unable to load places. Please refresh the page');
+    });
+  }
+  
+}
+
 
 // ViewModel
 function Neighbourhood()  {
@@ -6,8 +35,23 @@ function Neighbourhood()  {
       mapOptions,
       defaultLocation,
       currentLocation,
-      autocompleteInputBox,
-      places;
+      autocompleteInputBox;
+
+  self.foursquareAPI = new FoursquareAPI();
+
+  self.loading = ko.observable(true);
+
+  self.error = ko.observable(false);
+
+  //search pattern provided by user
+  //to filter the list of places
+  self.searchPattern = ko.observable("");
+
+  //all places received from fourSquare API
+  self.places = ko.observableArray([]);
+
+  //all places after applying the filtering
+  self.filteredPlacesList = ko.observableArray([]);
 
   // defaults to Bangalore
   self.currentLocation = {
@@ -18,48 +62,56 @@ function Neighbourhood()  {
     }
   }
 
-  //updates the map based on the current location
-  // clears the list of markers
-  self.setUpMapForCurrentLocation = function () {
-    
-    if(self.currentLocation.name != ' ') {
-      mapOptions = {
-        center : {
-          lat : self.currentLocation.coords.lat,
-          lng : self.currentLocation.coords.lng
-        },
-        zoom : 17,
-        disableDefaultUI : true // hides the streetview, zoom and map and satellite options.
-      }
-      
-      map = new google.maps.Map(document.getElementById("map"),mapOptions);
-      self.setUpNewLocationSearch();
-      
-    }//end of if 
-  }
+  //list of places for a given location
+  self.places = ko.observableArray([]);
 
-  self.setUpNewLocationSearch = function() {
-    autocompleteInputBox = new google.maps.places.Autocomplete(document.getElementById("autocomplete"));
-    google.maps.event.addDomListener(autocompleteInputBox,'place_changed',function(){
-      var place = autocompleteInputBox.getPlace();
-      if(place.geometry) {
-        var location = place.geometry.location;
-        self.currentLocation.name(place.name);
-        self.currentLocation.location.lat = location.lat();
-        self.currentLocation.location.lng = location.lng();
-        self.pantoLocation();
-      }
-    });
-  } 
 
+  //pans google map to given location
+  //coordinates
   self.pantoLocation = function() {
     map.panTo(self.currentLocation.coords);
     map.setZoom(15);
   }
 
-  // initializes on load.
-  function init()  {
+  self.fetchPlaces = function() {
+    
+    //clear existing places array
+    self.places([]);
+    self.foursquareAPI.getPlaces(self.currentLocation,function(data){
+      if(data.length <= 0) {
+        self.loading(false);
+        return;
+      }
+      //we have found places, lets display them on the ui
+      console.log(data);
+      self.places(data);
+      
 
+    },self.errorHandler);
+  }
+
+self.errorHandler = function (error) {
+        self.loading(false);
+        
+        if (error) {
+            console.log(error);
+
+            if (typeof error === 'object') {
+                self.errorText('Can not retrieve all the places. Please reload the page.');
+
+            } else if (typeof error === 'string') {
+                self.errorText(error);
+            }
+        }
+
+        self.error(true);
+};
+
+
+// initializes on load.
+function init()  {
+
+      //initial map options
       mapOptions = {
         center : {
           lat : self.currentLocation.coords.lat,
@@ -69,23 +121,36 @@ function Neighbourhood()  {
         disableDefaultUI : true // hides the streetview, zoom and map and satellite options.
       }
       
+      //setup map 
       map = new google.maps.Map(document.getElementById("map"),mapOptions);
+      
+      //setup atucomplete , for searching new location/neighbourhood
       autocompleteInputBox = new google.maps.places.Autocomplete(document.getElementById("autocomplete"));
       
       google.maps.event.addDomListener(autocompleteInputBox,'place_changed',function(){
       
       var place = autocompleteInputBox.getPlace();
-      
+
       if(place.geometry) {
         var location = place.geometry.location;
+        
+        //set the currentLocation
         self.currentLocation.name(place.name);
         self.currentLocation.coords.lat = location.lat();
         self.currentLocation.coords.lng = location.lng();
+        
+        //pan to the new currentLocation
         self.pantoLocation();
+
+        //reset search pattern for list of places
+        self.searchPattern("");
+
+        //now fetch the places 
+        self.fetchPlaces();
       }
     });
 
-  }
+}
 
   //call init
   init();

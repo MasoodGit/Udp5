@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Udacity Neigbhourd Project</title>
+  <meta charset="utf-8"> <!-- use utf-8 for display -->
+  <meta http-equiv="X-UA-Comatible" content="IE=edge"> <!-- make IE use best engine -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- for mobile view -->
+  <link rel="stylesheet" type="text/css" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+<!-- google map -->
+<div id="map"></div>
+<!--search location-->
+<div class="location">
+  <input type="text" id="autocomplete" placeholder="Enter location">
+</div>
+<!--search bar to search the venues in the neighbourhood-->
+<div class="search-venues"></div>
+<!-- list of venue for a given location / neighbourhood -->
+<div class="venue-list">
+  <ul class="places" data-bind="foreach: places()">
+    <li class="place">
+      <div class="row">
+        <!-- Image of the place -->
+        <div class="col-xs-3">
+          
+        </div>
+        <!-- Details of the place -->
+        <div class="col-xs-9">
+          <!-- name of the place -->
+          <h4></h4>
+          <!-- category the place belongs to -->
+          <h5></h5>
+          <!-- address of the place -->
+          <address></address>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<script 
+src="../bower_components/jquery/dist/jquery.js"></script>
+<script 
+src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript" 
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeO7RxN-dzOoH9PFw2-maP1e1KBUrwRHk&libraries=places"></script>
+<script 
+src="../bower_components/knockout/dist/knockout.js"></script>
+<script  src="js/app.js"></script>
+
+</body>
+</html>
