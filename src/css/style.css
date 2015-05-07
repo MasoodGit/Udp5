@@ -17,3 +17,153 @@ body,
 .location > input {
   width : inherit;
 }
+
+.search-places {
+  z-index: 101;
+  width: 300px;
+  top: 15px;
+  right:20px;
+  position: fixed;
+  padding-right: 2px;
+  padding-left: 2px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  background-color: #fff;
+  height: 35px;
+}
+
+.search-places input {
+  font-size : 15px;
+  line-height: 20px;
+  font-weight: 300;
+  margin : 0 !important;
+  outline : 0;
+  box-shadow: none;
+  height: auto !important;
+  top : 5px;
+  left:0px;
+  border:0;
+  text-align: left;
+  padding: 0px;
+  background: transparent;
+  position : absolute;
+  padding-left: 14px;
+  width: 100%;
+
+}
+
+.clear-search {
+  cursor : pointer;
+  display: inline-block;
+  width: 25px;
+  position:relative;
+  float:right;
+    line-height: 35px;
+  font-size: 16px;
+}
+
+a {
+  text-decoration: none;
+}
+
+a : hover {
+  color: #3a84df;
+  text-decoration: none !important;
+}
+
+.clear-search-anchor {
+  
+}
+
+.places {
+  z-index: 10;
+  max-width: 300px;
+  top: 55px;
+  right:20px;
+  position: fixed;
+  padding-right: 2px;
+  padding-left: 2px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  background-color: #fff;
+}
+
+.place-list {
+  max-width: 300px;
+  max-height: 300px;
+  list-style: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+}
+
+
+hr {
+  background: #e6e6e6;
+  border: none;
+  height: 1px;
+  margin-top: 8px;
+  margin-right: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+}
+
+.places-place-list-item-line {
+  margin-bottom: 0;
+  margin-left: 14px;
+  margin-top:0;
+  width: 370px;
+}
+
+.places-place-list-item {
+  min-height: 80px;
+  position: relative;
+  line-height: 16px;
+  font-size:12px;
+  padding: 6px 0 6px 0;
+
+}
+
+.places-place-list-item:hover {
+  background-color: #fafafa;
+  cursor: pointer;
+}
+
+.places-place-list-item-info {
+  display: inline-block;
+  margin-left: 14px;
+  padding: 2px 0 0 0;
+  vertical-align: top;
+  width: 280px;
+  margin-left : 14px;
+}
+
+
+.places-place-list-item-title {
+  color: #333;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.places-place-list-item-category {
+  color: #666;
+  font-size: 12px;
+  padding:0;
+  margin:0;
+  padding-bottom: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.places-place-list-item-address {
+  color: #999;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

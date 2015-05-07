@@ -13,29 +13,36 @@
 <div id="map"></div>
 <!--search location-->
 <div class="location">
-  <input type="text" id="autocomplete" placeholder="Enter location">
+  <input type="text" id="autocomplete" data-bind="attr: { placeholder: 'Location: ' + currentLocation.name()}">
 </div>
 <!--search bar to search the venues in the neighbourhood-->
-<div class="search-venues"></div>
+<div class="search-places">
+  <input type="text" placeholder="search for places">
+  <div class="clear-search">
+  <a href="#" class="clear-search-anchor">
+    <span> X </span>
+    </a>
+  </div>
+</div>
 <!-- list of venue for a given location / neighbourhood -->
-<div class="venue-list">
-  <ul class="places" data-bind="foreach: places()">
-    <li class="place">
-      <div class="row">
-        <!-- Image of the place -->
-        <div class="col-xs-3">
-          
-        </div>
+<div class="places">
+  <ul class="place-list" data-bind="foreach: places()">
+    <li>
+        <hr class="places-place-list-item-line">
         <!-- Details of the place -->
-        <div class="col-xs-9">
-          <!-- name of the place -->
-          <h4></h4>
-          <!-- category the place belongs to -->
-          <h5></h5>
-          <!-- address of the place -->
-          <address></address>
+        <div class="places-place-list-item">
+          <div class="places-place-list-item-info">
+            <!-- name of the place -->
+            <h4 class="places-place-list-item-title" data-bind="text: name"></h4>
+            <!-- category the place belongs to -->
+            <h5 class="places-place-list-item-category" data-bind="visible: categories.length > 0, text : categories[0].name"></h5>
+            <!-- address of the place -->
+            <div class="places-place-list-item-address" data-bind="visible :location.formattedAddress.length > 0">
+              <span data-bind="text : location.formattedAddress.join(',')"></span>
+            </div>
+          </div>
         </div>
-      </div>
+     
     </li>
   </ul>
 </div>

@@ -3,13 +3,16 @@ function FoursquareAPI() {
 
   this.clientId = "4ZKYMPQ4P0S3NA2JW1ACCJV1IFWEOCEWMRPNQILFFX5VLBS2";
   this.clientSecret = "05EAWPEOHRYCHGUF53J3KW5EJ545R3U1D1GFRHJFEWAD4VUC";
+
   this.baseUrl = "https://api.foursquare.com/v2/venues/search?ll={{lat}},{{lng}}&client_id=" 
                  + this.clientId + "&client_secret=" + this.clientSecret + "&v=20150404";
+  
   this.getPlaces = function(location,successCallbackFunc,errorCallbackFunc) {
+  
   var endpoint = this.baseUrl
                    .replace(/{{lat}}/g,location.coords.lat)
                    .replace(/{{lng}}/g,location.coords.lng);
-  console.log(endpoint);
+
   $.get(endpoint)
     .done(function(data) {
       var meta = data.meta;
@@ -65,7 +68,6 @@ function Neighbourhood()  {
   //list of places for a given location
   self.places = ko.observableArray([]);
 
-
   //pans google map to given location
   //coordinates
   self.pantoLocation = function() {
@@ -77,7 +79,9 @@ function Neighbourhood()  {
     
     //clear existing places array
     self.places([]);
-    self.foursquareAPI.getPlaces(self.currentLocation,function(data){
+
+    //call foursquare API to get Places for the location
+    self.foursquareAPI.getPlaces(self.currentLocation,function(data) {
       if(data.length <= 0) {
         self.loading(false);
         return;
@@ -85,8 +89,6 @@ function Neighbourhood()  {
       //we have found places, lets display them on the ui
       console.log(data);
       self.places(data);
-      
-
     },self.errorHandler);
   }
 
@@ -124,12 +126,17 @@ function init()  {
       //setup map 
       map = new google.maps.Map(document.getElementById("map"),mapOptions);
       
+      //get places for the current(default) location
+      self.fetchPlaces();
+
       //setup atucomplete , for searching new location/neighbourhood
       autocompleteInputBox = new google.maps.places.Autocomplete(document.getElementById("autocomplete"));
       
-      google.maps.event.addDomListener(autocompleteInputBox,'place_changed',function(){
+      google.maps.event.addDomListener(autocompleteInputBox,'place_changed',function() {
       
       var place = autocompleteInputBox.getPlace();
+
+     
 
       if(place.geometry) {
         var location = place.geometry.location;
@@ -148,7 +155,8 @@ function init()  {
         //now fetch the places 
         self.fetchPlaces();
       }
-    });
+    }); //end autocompleteInputBox DomListner
+
 
 }
 
