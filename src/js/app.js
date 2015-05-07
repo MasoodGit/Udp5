@@ -38,7 +38,8 @@ function Neighbourhood()  {
       mapOptions,
       defaultLocation,
       currentLocation,
-      autocompleteInputBox;
+      autocompleteInputBox,
+      infoWindow;
 
   self.foursquareAPI = new FoursquareAPI();
 
@@ -76,19 +77,61 @@ function Neighbourhood()  {
   }
 
   self.fetchPlaces = function() {
-    
-    //clear existing places array
-    self.places([]);
-
     //call foursquare API to get Places for the location
     self.foursquareAPI.getPlaces(self.currentLocation,function(data) {
+      
       if(data.length <= 0) {
         self.loading(false);
         return;
       }
-      //we have found places, lets display them on the ui
-      console.log(data);
-      self.places(data);
+
+      data.forEach(function(place) {
+        
+        place.isMatched = ko.computed(function() {
+          var searchPattern = self.searchPattern().toLowerCase();
+          for (var i = 0; i < place.categories.length; ++i) {
+            if (place.categories[i].name.toLowerCase().search(searchPattern) != -1) {
+              return true;
+            }
+          }
+          return place.name.substring(0, searchPattern.length).toLowerCase() === searchPattern;
+        });
+
+        place.categoryName = ko.computed(function(){
+          if(place.categories.length <= 0) {
+            return '';
+          }
+          if(!place.categories[0].name) {
+            return '';
+          }
+          return place.categories[0].name;
+        });
+
+        place.marker = new google.maps.Marker({
+          map: map,
+          title: place.name,
+          position : {
+            lat : place.location.lat,
+            lng : place.location.lng
+          }
+        });
+
+        google.maps.event.addListener(place.marker,'click',function() {
+          infoWindow.open(map,place.marker);
+          document.getElementById(place.id).scrollIntoView();
+        });
+
+
+
+      });
+
+
+    //assign data received to 
+    //self.places
+    self.places(data);
+
+
+
     },self.errorHandler);
   }
 
@@ -119,13 +162,16 @@ function init()  {
           lat : self.currentLocation.coords.lat,
           lng : self.currentLocation.coords.lng
         },
-        zoom : 15,
+        zoom : 17,
         disableDefaultUI : true // hides the streetview, zoom and map and satellite options.
       }
       
       //setup map 
       map = new google.maps.Map(document.getElementById("map"),mapOptions);
       
+      //instantiate one infoWindow for the entire map
+      infoWindow = new google.maps.InfoWindow();
+
       //get places for the current(default) location
       self.fetchPlaces();
 
@@ -134,9 +180,11 @@ function init()  {
       
       google.maps.event.addDomListener(autocompleteInputBox,'place_changed',function() {
       
-      var place = autocompleteInputBox.getPlace();
+      //clear existing places array
+      self.places([]);
+      
 
-     
+      var place = autocompleteInputBox.getPlace();
 
       if(place.geometry) {
         var location = place.geometry.location;
@@ -154,6 +202,7 @@ function init()  {
 
         //now fetch the places 
         self.fetchPlaces();
+
       }
     }); //end autocompleteInputBox DomListner
 

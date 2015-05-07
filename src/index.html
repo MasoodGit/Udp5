@@ -17,7 +17,7 @@
 </div>
 <!--search bar to search the venues in the neighbourhood-->
 <div class="search-places">
-  <input type="text" placeholder="search for places">
+  <input type="text" placeholder="search for places" data-bind="textInput : searchPattern">
   <div class="clear-search">
   <a href="#" class="clear-search-anchor">
     <span> X </span>
@@ -26,8 +26,8 @@
 </div>
 <!-- list of venue for a given location / neighbourhood -->
 <div class="places">
-  <ul class="place-list" data-bind="foreach: places()">
-    <li>
+  <ul class="place-list" data-bind="foreach: places">
+    <li data-bind="attr : { id: id } , visible : isMatched">
         <hr class="places-place-list-item-line">
         <!-- Details of the place -->
         <div class="places-place-list-item">
@@ -35,7 +35,7 @@
             <!-- name of the place -->
             <h4 class="places-place-list-item-title" data-bind="text: name"></h4>
             <!-- category the place belongs to -->
-            <h5 class="places-place-list-item-category" data-bind="visible: categories.length > 0, text : categories[0].name"></h5>
+            <h5 class="places-place-list-item-category" data-bind="visible: categories.length > 0, text : categoryName"></h5>
             <!-- address of the place -->
             <div class="places-place-list-item-address" data-bind="visible :location.formattedAddress.length > 0">
               <span data-bind="text : location.formattedAddress.join(',')"></span>
