@@ -73,7 +73,12 @@ function Neighbourhood()  {
   //coordinates
   self.pantoLocation = function() {
     map.panTo(self.currentLocation.coords);
-    map.setZoom(15);
+    map.setZoom(18);
+  }
+
+  self.toggleInfoWindow = function(place) {
+    google.maps.event.trigger(place.marker,'click');
+    map.panTo(place.marker.position);
   }
 
   self.fetchPlaces = function() {
@@ -88,6 +93,7 @@ function Neighbourhood()  {
       data.forEach(function(place) {
         
         place.isMatched = ko.computed(function() {
+          infoWindow.close();
           var searchPattern = self.searchPattern().toLowerCase();
           for (var i = 0; i < place.categories.length; ++i) {
             if (place.categories[i].name.toLowerCase().search(searchPattern) != -1) {
@@ -116,8 +122,15 @@ function Neighbourhood()  {
           }
         });
 
+        place.isMarkerVisible = ko.computed(function(){
+          place.marker.setVisible(place.isMatched());
+        });
+        
+
         google.maps.event.addListener(place.marker,'click',function() {
+          infoWindow.setContent(place.name);
           infoWindow.open(map,place.marker);
+
           document.getElementById(place.id).scrollIntoView();
         });
 

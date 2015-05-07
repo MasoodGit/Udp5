@@ -29,8 +29,8 @@
   <ul class="place-list" data-bind="foreach: places">
     <li data-bind="attr : { id: id } , visible : isMatched">
         <hr class="places-place-list-item-line">
-        <!-- Details of the place -->
-        <div class="places-place-list-item">
+        <div class="places-place-list-item" data-bind="click: $root.toggleInfoWindow">
+          <!-- Details of the place -->
           <div class="places-place-list-item-info">
             <!-- name of the place -->
             <h4 class="places-place-list-item-title" data-bind="text: name"></h4>
