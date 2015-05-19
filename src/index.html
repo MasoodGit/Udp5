@@ -19,14 +19,14 @@
 <div class="search-places">
   <input type="text" placeholder="search for places" data-bind="textInput : searchPattern">
   <div class="clear-search">
-  <a href="#" class="clear-search-anchor">
+  <a href="#" class="clear-search-anchor" data-bind="click: $root.clearSearch">
     <span> X </span>
     </a>
   </div>
 </div>
 <!-- list of venue for a given location / neighbourhood -->
 <div class="places">
-  <ul class="place-list" data-bind="foreach: places">
+  <ul class="place-list  jfk-scrollbar jfk-scrollbar-borderless" data-bind="foreach: places">
     <li data-bind="attr : { id: id } , visible : isMatched">
         <hr class="places-place-list-item-line">
         <div class="places-place-list-item" data-bind="click: $root.toggleInfoWindow">

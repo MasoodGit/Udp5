@@ -76,9 +76,14 @@ function Neighbourhood()  {
     map.setZoom(18);
   }
 
+  self.clearSearch = function() {
+    self.searchPattern("");
+  }
+
   self.toggleInfoWindow = function(place) {
-    google.maps.event.trigger(place.marker,'click');
     map.panTo(place.marker.position);
+    infoWindow.setContent(place.name);
+    infoWindow.open(map,place.marker);
   }
 
   self.fetchPlaces = function() {
