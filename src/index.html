@@ -11,6 +11,18 @@
 <body>
 <!-- google map -->
 <div id="map"></div>
+<!-- message-->
+<div class="message-bar">
+  <div  class="message-bar-loading-status" data-bind="visible: isLoading">
+    <span>Loading....</span>
+  </div>
+  <div style="display:none" class="message-bar-error-message" data-bind="visible: isErrored">
+    <p data-bind="text: errorMessage"></p>
+  </div>
+  <div style="display:none" class="message-bar-search-result-message" data-bind="visible: places.length = 0">
+    <span>No places found around </span><span data-bind="text: currentLocation.name"></span>
+  </div>
+</div>
 <!--search location-->
 <div class="location">
   <input type="text" id="autocomplete" data-bind="attr: { placeholder: 'Location: ' + currentLocation.name()}">
@@ -51,7 +63,7 @@
 src="js/lib/jquery.min.js"></script>
 <script 
 <script type="text/javascript" 
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeO7RxN-dzOoH9PFw2-maP1e1KBUrwRHk&libraries=places"></script>
+src="https://maps.googleapis.com/maps/api/js?v=3.20&key=AIzaSyDeO7RxN-dzOoH9PFw2-maP1e1KBUrwRHk&libraries=places"></script>
 <script 
 src="js/lib/knockout.js"></script>
 <script  src="js/app.js"></script>

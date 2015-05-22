@@ -33,10 +33,46 @@ a : hover {
   text-decoration: none !important;
 }
 
+.message-bar {
+  top:1px;  
+  z-index: 11;
+  width: 55%;
+  top: 1px;
+  position:fixed;
+  height:35px;
+  overflow: hidden;
+  margin-left: 33%;
+  height: auto;
+}
+
+.message-bar-loading-status {
+  color : white;
+  background-color: grey;
+  width: 100px;
+  border:1px solid white;
+  font-size: 12px;
+}
+
+.message-bar-error-message {
+  color : white;
+  background-color: red;
+  width: 100%;
+  border:1px solid white;
+  font-size: 11px;
+  padding-left: 5px;
+  padding-bottom: 2px;
+  height: auto;
+  max-width: 300px;
+}
+
+.message-bar-search-result-message {
+
+}
+
 .location {
   z-index: 10;
   width: 300px;
-  top : 15px;
+  top : 45px;
   left : 25px;
   position:fixed;
   padding-right: 2px;
@@ -68,7 +104,7 @@ a : hover {
 .search-places {
   z-index: 10;
   width: 300px;
-  top: 55px;
+  top: 85px;
   left:25px;
   position: fixed;
   padding-right: 2px;
@@ -120,7 +156,7 @@ a : hover {
 .places {
   z-index: 10;
   max-width: 300px;
-  top: 95px;
+  top: 125px;
   left:25px;
   position: fixed;
   padding-right: 2px;
@@ -252,5 +288,10 @@ hr {
   box-shadow: inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);
 }
 
-
+.infowindow-address {
+  font-style: normal;
+  font-size: 11px;
+  color: #999;
+  overflow: hidden;
+}
 

@@ -43,9 +43,11 @@ function Neighbourhood()  {
 
   self.foursquareAPI = new FoursquareAPI();
 
-  self.loading = ko.observable(true);
+  self.isLoading = ko.observable(true);
 
-  self.error = ko.observable(false);
+  self.isErrored = ko.observable(false);
+
+  self.errorMessage = ko.observable(false);
 
   //search pattern provided by user
   //to filter the list of places
@@ -82,8 +84,25 @@ function Neighbourhood()  {
 
   self.toggleInfoWindow = function(place) {
     map.panTo(place.marker.position);
-    infoWindow.setContent(place.name);
+    infoWindow.setContent(self.getInfoWindowContent(place));
     infoWindow.open(map,place.marker);
+  }
+
+  self.getInfoWindowContent = function(place) {
+
+    var address = "";
+
+
+    if (place.location.formattedAddress.length > 0) {
+      address += '<br><address class="infowindow-address">';
+      place.location.formattedAddress.forEach(function (addressItem) {
+        address += addressItem + '<br>';
+      });
+      address += '</address>';
+    }
+
+    var content = '<p>' + place.name + '</p>' + address;
+    return content;
   }
 
   self.fetchPlaces = function() {
@@ -91,7 +110,7 @@ function Neighbourhood()  {
     self.foursquareAPI.getPlaces(self.currentLocation,function(data) {
       
       if(data.length <= 0) {
-        self.loading(false);
+        self.isLoading(false);
         return;
       }
 
@@ -133,41 +152,38 @@ function Neighbourhood()  {
         
 
         google.maps.event.addListener(place.marker,'click',function() {
-          infoWindow.setContent(place.name);
+          
+          infoWindow.setContent(self.getInfoWindowContent(place));
           infoWindow.open(map,place.marker);
 
           document.getElementById(place.id).scrollIntoView();
         });
-
-
-
       });
 
-
+    //remove the loading message
+    self.isLoading(false);
     //assign data received to 
     //self.places
     self.places(data);
-
-
 
     },self.errorHandler);
   }
 
 self.errorHandler = function (error) {
-        self.loading(false);
+        self.isLoading(false);
         
         if (error) {
-            console.log(error);
+            console.log('Error occured...',error);
 
             if (typeof error === 'object') {
-                self.errorText('Can not retrieve all the places. Please reload the page.');
+                self.errorMessage('Can not retrieve all the places. Please reload the page.');
 
             } else if (typeof error === 'string') {
-                self.errorText(error);
+                self.errorMessage(error);
             }
         }
 
-        self.error(true);
+        self.isErrored(true);
 };
 
 
@@ -176,12 +192,24 @@ function init()  {
 
       //initial map options
       mapOptions = {
+
         center : {
           lat : self.currentLocation.coords.lat,
           lng : self.currentLocation.coords.lng
         },
         zoom : 17,
-        disableDefaultUI : true // hides the streetview, zoom and map and satellite options.
+        disableDefaultUI : true ,// hides the streetview, zoom and map and satellite options.
+        zoom: 18,
+        zoomControl: true,
+        zoomControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_BOTTOM,
+            style: google.maps.ZoomControlStyle.SMALL
+            },
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+        position: google.maps.ControlPosition.RIGHT_BOTTOM
+    },
       }
       
       //setup map 
@@ -228,7 +256,14 @@ function init()  {
 }
 
   //call init
-  init();
+  try {
+      init();
+  }
+  catch(e) {
+
+    self.errorHandler(e);
+  }
+  
 }
 
 
