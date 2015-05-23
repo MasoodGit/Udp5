@@ -1,12 +1,10 @@
-
 //Function to the foursquare api
 function FoursquareAPI() {
 
   this.clientId = "4ZKYMPQ4P0S3NA2JW1ACCJV1IFWEOCEWMRPNQILFFX5VLBS2";
   this.clientSecret = "05EAWPEOHRYCHGUF53J3KW5EJ545R3U1D1GFRHJFEWAD4VUC";
 
-  this.baseUrl = "https://api.foursquare.com/v2/venues/search?ll={{lat}},{{lng}}&client_id=" 
-                 + this.clientId + "&client_secret=" + this.clientSecret + "&v=20150404";
+  this.baseUrl = "https://api.foursquare.com/v2/venues/search?ll={{lat}},{{lng}}&client_id=" + this.clientId + "&client_secret=" + this.clientSecret + "&v=20150404";
   
   this.getPlaces = function(location,successCallbackFunc,errorCallbackFunc) {
   
@@ -18,7 +16,7 @@ function FoursquareAPI() {
     .done(function(data) {
       var meta = data.meta;
       if(meta.code == 200) {
-        successCallbackFunc(data.response['venues']);
+        successCallbackFunc(data.response.venues);
       }else {
         errorCallbackFunc({errorType: meta.errorType, errorDetail: meta.errorDetail});
       }
@@ -27,7 +25,7 @@ function FoursquareAPI() {
     .fail(function() {
       errorCallbackFunc('Unable to load places. Please refresh the page');
     });
-  }
+  };
   
 } //end of FourSquareAPI
 
@@ -71,7 +69,7 @@ function Neighbourhood()  {
       lat : 12.9738,
       lng : 77.6119
     }
-  }
+  };
 
   //list of places for a given location
   self.places = ko.observableArray([]);
@@ -81,13 +79,13 @@ function Neighbourhood()  {
   self.pantoLocation = function() {
     map.panTo(self.currentLocation.coords);
     map.setZoom(18);
-  }
+  };
 
   //function clears the input filed for 
   //searching places at a Location
   self.clearSearch = function() {
     self.searchPattern("");
-  }
+  };
 
   //displays infowindow, when a place is clicked 
   //from place-list or the marker
@@ -95,7 +93,7 @@ function Neighbourhood()  {
     map.panTo(place.marker.position);
     infoWindow.setContent(self.getInfoWindowContent(place));
     infoWindow.open(map,place.marker);
-  }
+  };
 
   //creates the content that needs to 
   //be shown in the infoWindow for a place
@@ -110,7 +108,7 @@ function Neighbourhood()  {
     }
     var content = '<p>' + place.name + '</p>' + address;
     return content;
-  }
+  };
 
   //fetch places info using the foursquare api
   self.fetchPlaces = function()  {
@@ -178,7 +176,7 @@ function Neighbourhood()  {
     self.places(data);
 
     },self.errorHandler);
-  }
+  };
 
 //generic errorhandler
 self.errorHandler = function (error) {
@@ -210,21 +208,20 @@ function init()  {
       lat : self.currentLocation.coords.lat,
       lng : self.currentLocation.coords.lng
     },
-    zoom : 17,
-      disableDefaultUI : true ,// hides the streetview, zoom and map and satellite options.
-      zoom: 18,
-      zoomControl: true,
-      zoomControlOptions: {
-      position: google.maps.ControlPosition.RIGHT_BOTTOM,
-      style: google.maps.ZoomControlStyle.SMALL
-      },
-      mapTypeControl: true,
-      mapTypeControlOptions: {
-      style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-      position: google.maps.ControlPosition.RIGHT_BOTTOM
+    disableDefaultUI : true ,// hides the streetview, zoom and map and satellite options.
+    zoom: 18,
+    zoomControl: true,
+    zoomControlOptions: {
+    position: google.maps.ControlPosition.RIGHT_BOTTOM,
+    style: google.maps.ZoomControlStyle.SMALL
     },
-  }
-      
+    mapTypeControl: true,
+    mapTypeControlOptions: {
+    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+    position: google.maps.ControlPosition.RIGHT_BOTTOM
+    },
+  };
+
   //setup map 
   map = new google.maps.Map(document.getElementById("map"),mapOptions);
       
