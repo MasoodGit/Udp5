@@ -24,14 +24,14 @@
   </div>
 </div>
 <!--search location-->
-<div class="location">
-  <input type="text" id="autocomplete" data-bind="attr: { placeholder: 'Location: ' + currentLocation.name()}">
-</div>
+
+  <input class="location" type="text" id="autocomplete" 
+  data-bind="attr: { placeholder: 'Location: ' + currentLocation.name()}">
 <!--search bar to search the venues in the neighbourhood-->
 <div class="search-places">
-  <input type="text" placeholder="search for places" data-bind="textInput : searchPattern">
+  <input type="text" placeholder="Search for places" data-bind="textInput : searchPattern">
   <div class="clear-search">
-  <a href="#" class="clear-search-anchor" data-bind="click: $root.clearSearch">
+  <a href="#" class="clear-search-anchor" data-bind="click: clearSearch">
     <span> X </span>
     </a>
   </div>
@@ -67,6 +67,18 @@ src="https://maps.googleapis.com/maps/api/js?v=3.19&key=AIzaSyDeO7RxN-dzOoH9PFw2
 <script 
 src="js/lib/knockout.js"></script>
 <script  src="js/app.js"></script>
-
+<script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Roboto:100,300,400:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })(); </script>
 </body>
 </html>

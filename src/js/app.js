@@ -80,6 +80,7 @@ function Neighbourhood()  {
 
   self.clearSearch = function() {
     self.searchPattern("");
+
   }
 
   self.toggleInfoWindow = function(place) {
@@ -226,6 +227,9 @@ function init()  {
       
       google.maps.event.addDomListener(autocompleteInputBox,'place_changed',function() {
       
+
+      self.isLoading(true);
+
       //clear existing places array
       self.places([]);
       
@@ -244,10 +248,13 @@ function init()  {
         self.pantoLocation();
 
         //reset search pattern for list of places
-        self.searchPattern("");
+        self.searchPattern('');
+
 
         //now fetch the places 
         self.fetchPlaces();
+
+
 
       }
     }); //end autocompleteInputBox DomListner
