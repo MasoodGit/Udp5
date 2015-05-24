@@ -11,7 +11,7 @@ obj
 ###################
 node_modules
 bower_components
-build
+#build #override build 
 #.tmp
 
 # Ignore Test reporters
