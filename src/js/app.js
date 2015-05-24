@@ -7,7 +7,7 @@ function FoursquareAPI() {
   var baseUrl  = "https://api.foursquare.com/v2/venues/explore?";
   var location = "ll={{lat}},{{lng}}";
   var keys     = "&client_id={{clientId}}&client_secret={{client_secret}}";
-  var params   = "&limit=50&section=topPicks&day=any&time=any&locale=en&v=20150404";
+  var params   = "&limit=20&section=topPicks&day=any&time=any&locale=en&v=20150404";
   
   baseUrl = baseUrl + location + keys + params;
 

@@ -15,7 +15,7 @@
 * Search for a Location ( app defaults to Bangalore on launch)
 * Use the AutoComplete box to search for a location.
 * On selecting a location list of recommended places are fetched using the Foursquare API
-* Search for places that have been listed  and clicking on a place displays the info window with
+* Search for places that have been listed  and selecting a place displays the info window with
   the rating for the place.
   
 
