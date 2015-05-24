@@ -4,19 +4,26 @@ function FoursquareAPI() {
   this.clientId = "4ZKYMPQ4P0S3NA2JW1ACCJV1IFWEOCEWMRPNQILFFX5VLBS2";
   this.clientSecret = "05EAWPEOHRYCHGUF53J3KW5EJ545R3U1D1GFRHJFEWAD4VUC";
 
-  this.baseUrl = "https://api.foursquare.com/v2/venues/search?ll={{lat}},{{lng}}&client_id=" + this.clientId + "&client_secret=" + this.clientSecret + "&v=20150404";
+  var baseUrl  = "https://api.foursquare.com/v2/venues/explore?";
+  var location = "ll={{lat}},{{lng}}";
+  var keys     = "&client_id={{clientId}}&client_secret={{client_secret}}";
+  var params   = "&limit=50&section=topPicks&day=any&time=any&locale=en&v=20150404";
   
+  baseUrl = baseUrl + location + keys + params;
+
   this.getPlaces = function(location,successCallbackFunc,errorCallbackFunc) {
   
-  var endpoint = this.baseUrl
+  var endpoint = baseUrl
                    .replace(/{{lat}}/g,location.coords.lat)
-                   .replace(/{{lng}}/g,location.coords.lng);
+                   .replace(/{{lng}}/g,location.coords.lng)
+                   .replace(/{{clientId}}/g,this.clientId)
+                   .replace(/{{client_secret}}/g,this.clientSecret);
 
   $.get(endpoint)
     .done(function(data) {
       var meta = data.meta;
       if(meta.code == 200) {
-        successCallbackFunc(data.response.venues);
+        successCallbackFunc(data.response);
       }else {
         errorCallbackFunc({errorType: meta.errorType, errorDetail: meta.errorDetail});
       }
@@ -38,7 +45,8 @@ function Neighbourhood()  {
       defaultLocation,
       currentLocation,
       autocompleteInputBox,
-      infoWindow;
+      infoWindow,
+      infowindowDataTemplate="";
 
   //instantiate foursquareAPI
   self.foursquareAPI = new FoursquareAPI();
@@ -98,16 +106,28 @@ function Neighbourhood()  {
   //creates the content that needs to 
   //be shown in the infoWindow for a place
   self.getInfoWindowContent = function(place) {
-    var address = "";
+    var venueAddress = "";
     if (place.location.formattedAddress.length > 0) {
-      address += '<br><address class="infowindow-address">';
       place.location.formattedAddress.forEach(function (addressItem) {
-        address += addressItem + '<br>';
+        venueAddress += " " + addressItem ;
       });
-      address += '</address>';
     }
-    var content = '<p>' + place.name + '</p>' + address;
-    return content;
+    var venueRating  = place.rating;
+    var venueRatingColor = place.ratingColor;
+    var venueCategoryName = place.categoryName();
+    var venueCategoryIcon = place.categoryIcon();
+    var infoTemplate =""; 
+
+    infoTemplate = '<div class="infowindow-block"><div class="infowindow-icon"><img class="icon" src="' + venueCategoryIcon +'"></div>';
+    infoTemplate += '<div class="infowindow-details"><div class="infowindow-venue-name"><span>' + place.name + '</span></div><div class="infowindow-venue-score" style="background: #'+ venueRatingColor +';">' +  venueRating + '</div>';
+    infoTemplate += '<div class="infowindow-venue-AddressData"><div class ="infowindow-venue-address">' + venueAddress +'</div>';
+    infoTemplate += '<div class="infowindow-venue-data"><span class="venueDataItem"><span class="categoryName">' + venueCategoryName + '</span></span>';
+    infoTemplate += '</div></div></div></div>';
+
+   
+
+
+    return infoTemplate;
   };
 
   //fetch places info using the foursquare api
@@ -116,13 +136,24 @@ function Neighbourhood()  {
     //call foursquare API to get Places for the location
     self.foursquareAPI.getPlaces(self.currentLocation,function(data) {
       
-    if(data.length <= 0) {
+    
+    var items = data.groups[0].items;
+
+    if(items.length <= 0) {
       self.isLoading(false);
       return;
     }
 
-    data.forEach(function(place) {
-        
+    var suggestedBounds = data.suggestedBounds;
+    if(suggestedBounds !== undefined ) {
+      var mapBounds = new google.maps.LatLngBounds(
+          new google.maps.LatLng(suggestedBounds.sw.lat, suggestedBounds.sw.lng),
+          new google.maps.LatLng(suggestedBounds.ne.lat, suggestedBounds.ne.lng));
+        map.fitBounds(mapBounds);
+    }
+
+    items.forEach(function(item) {
+        var place = item.venue;
         place.isMatched = ko.computed(function() {
           infoWindow.close();
           var searchPattern = self.searchPattern().toLowerCase();
@@ -143,6 +174,20 @@ function Neighbourhood()  {
           }
           return place.categories[0].name;
         });
+
+        place.categoryIcon = ko.computed(function(){
+          if(place.categories.length <= 0) {
+            return '';
+          }
+          if(!place.categories[0].icon){
+            return '';
+          }
+          var prefix = place.categories[0].icon.prefix;
+          var imageSize = 32;
+          var suffix = place.categories[0].icon.suffix;
+          return prefix + "bg_" + imageSize + suffix;
+        });
+
 
         place.marker = new google.maps.Marker({
           map: map,
@@ -165,7 +210,7 @@ function Neighbourhood()  {
           document.getElementById(place.id).scrollIntoView();
 
         });
-
+        self.places.push(place);
       });
 
     //remove the loading message
@@ -173,7 +218,7 @@ function Neighbourhood()  {
 
     //assign data received to 
     //self.places
-    self.places(data);
+    //self.places(data);
 
     },self.errorHandler);
   };
@@ -201,6 +246,8 @@ self.errorHandler = function (error) {
 
 // initializes on load.
 function init()  {
+
+  infowindowDataTemplate = $('script[data-template="infowindowTemplate"]').html();
 
   //initial map options
   mapOptions = {
@@ -250,7 +297,7 @@ function init()  {
       self.currentLocation.coords.lng = location.lng();
         
       //pan to the new currentLocation
-      self.pantoLocation();
+      //self.pantoLocation();
 
       //reset search pattern for list of places
       self.searchPattern('');
