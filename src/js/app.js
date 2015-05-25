@@ -277,6 +277,14 @@ function init()  {
 
   //setup map 
   map = new google.maps.Map(document.getElementById("map"),mapOptions);
+
+ //http://stackoverflow.com/questions/18444161/google-maps-responsive-resize
+  google.maps.event.addDomListener(window,"resize",function(){
+    var center = map.getCenter();
+    google.maps.event.trigger(map,"resize");
+    map.setCenter(center);
+  });
+
       
   //instantiate one infoWindow for the entire map
   infoWindow = new google.maps.InfoWindow();
@@ -326,6 +334,7 @@ $(document).ready(function()  {
 
   //instantiate the viewmodel
   ko.applyBindings(new Neighbourhood());
+
 
   //fetch google Roboto fonts
   WebFontConfig = {
