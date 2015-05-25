@@ -39,14 +39,14 @@ function FoursquareAPI() {
 
 // Neighbourhood ViewModel
 function Neighbourhood()  {
-  var self = this,
-      map,
-      mapOptions,
-      defaultLocation,
-      currentLocation,
-      autocompleteInputBox,
-      infoWindow,
-      infowindowDataTemplate="";
+  var self = this;
+  var map;
+  var mapOptions;
+  var defaultLocation;
+  var currentLocation;
+  var autocompleteInputBox;
+  var infoWindow;
+      
 
   //instantiate foursquareAPI
   self.foursquareAPI = new FoursquareAPI();
@@ -64,11 +64,11 @@ function Neighbourhood()  {
   //to filter the list of places
   self.searchPattern = ko.observable("");
 
-  //all places received from fourSquare API
-  self.places = ko.observableArray([]);
+  //list of places for a given location
+  self.places = ko.observableArray();
 
   //all places after applying the filtering
-  self.filteredPlacesList = ko.observableArray([]);
+  self.filteredPlacesList = ko.observableArray();
 
   // defaults to Bangalore
   self.currentLocation = {
@@ -78,9 +78,6 @@ function Neighbourhood()  {
       lng : 77.6119
     }
   };
-
-  //list of places for a given location
-  self.places = ko.observableArray([]);
 
   //pans google map to given location
   //coordinates
@@ -124,9 +121,6 @@ function Neighbourhood()  {
     infoTemplate += '<div class="infowindow-venue-data"><span class="venueDataItem"><span class="categoryName">' + venueCategoryName + '</span></span>';
     infoTemplate += '</div></div></div></div>';
 
-   
-
-
     return infoTemplate;
   };
 
@@ -157,7 +151,8 @@ function Neighbourhood()  {
         place.isMatched = ko.computed(function() {
           infoWindow.close();
           var searchPattern = self.searchPattern().toLowerCase();
-          for (var i = 0; i < place.categories.length; ++i) {
+          var numberOfCategories = place.categories.length;
+          for (var i = 0; i < numberOfCategories; ++i) {
             if (place.categories[i].name.toLowerCase().search(searchPattern) != -1) {
               return true;
             }
@@ -166,7 +161,7 @@ function Neighbourhood()  {
         });
 
         place.categoryName = ko.computed(function(){
-          if(place.categories.length <= 0) {
+          if(numberOfCategories <= 0) {
             return '';
           }
           if(!place.categories[0].name) {
