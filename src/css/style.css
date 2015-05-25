@@ -10,7 +10,7 @@ textarea {
 
 html,
 body,
-.google.map {
+#map {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -111,11 +111,10 @@ a : hover {
   left: 0;
   border: 0;
   text-align: left;
-  padding: 0 0 0 14px;
+  padding: 5px 0 0 14px;
   background: transparent;
   position: absolute;
   width: 100%;
-
 }
 
 .clear-search {

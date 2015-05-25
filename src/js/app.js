@@ -46,6 +46,7 @@ function Neighbourhood()  {
   var currentLocation;
   var autocompleteInputBox;
   var infoWindow;
+  var categoryIconArray = [];
       
 
   //instantiate foursquareAPI
@@ -109,19 +110,24 @@ function Neighbourhood()  {
         venueAddress += " " + addressItem ;
       });
     }
+
     var venueRating  = place.rating;
     var venueRatingColor = place.ratingColor;
     var venueCategoryName = place.categoryName();
-    var venueCategoryIcon = place.categoryIcon();
+    var venueCategoryIcon = categoryIconArray[place.categoryIcon()];
+    
     var infoTemplate =""; 
-
-    infoTemplate = '<div class="infowindow-block"><div class="infowindow-icon"><img class="icon" src="' + venueCategoryIcon +'"></div>';
+  
+    infoTemplate = '<div class="infowindow-block"><div class="infowindow-icon"></div>';
     infoTemplate += '<div class="infowindow-details"><div class="infowindow-venue-name"><span>' + place.name + '</span></div><div class="infowindow-venue-score" style="background: #'+ venueRatingColor +';">' +  venueRating + '</div>';
     infoTemplate += '<div class="infowindow-venue-AddressData"><div class ="infowindow-venue-address">' + venueAddress +'</div>';
     infoTemplate += '<div class="infowindow-venue-data"><span class="venueDataItem"><span class="categoryName">' + venueCategoryName + '</span></span>';
     infoTemplate += '</div></div></div></div>';
 
-    return infoTemplate;
+    //append category icon
+    var $infoTemplate = $(infoTemplate);
+    $infoTemplate.find("div.infowindow-icon").append(venueCategoryIcon);
+    return $infoTemplate.html();
   };
 
   //fetch places info using the foursquare api
@@ -129,8 +135,6 @@ function Neighbourhood()  {
 
     //call foursquare API to get Places for the location
     self.foursquareAPI.getPlaces(self.currentLocation,function(data) {
-      
-    
     var items = data.groups[0].items;
 
     if(items.length <= 0) {
@@ -161,7 +165,7 @@ function Neighbourhood()  {
         });
 
         place.categoryName = ko.computed(function(){
-          if(numberOfCategories <= 0) {
+          if(place.categories.length <= 0) {
             return '';
           }
           if(!place.categories[0].name) {
@@ -180,7 +184,9 @@ function Neighbourhood()  {
           var prefix = place.categories[0].icon.prefix;
           var imageSize = 32;
           var suffix = place.categories[0].icon.suffix;
-          return prefix + "bg_" + imageSize + suffix;
+          var imageSrc =  prefix + "bg_" + imageSize + suffix;
+          categoryIconArray.push(imageSrc);
+          return imageSrc;
         });
 
 
@@ -208,12 +214,17 @@ function Neighbourhood()  {
         self.places.push(place);
       });
 
+    //load all category icon images
+    categoryIconArray.forEach(function(url){
+      var img = new Image();
+      img.onload = function() {
+        categoryIconArray[url]= img;
+      };
+      img.src = url;
+    });
+
     //remove the loading message
     self.isLoading(false);
-
-    //assign data received to 
-    //self.places
-    //self.places(data);
 
     },self.errorHandler);
   };
@@ -291,9 +302,6 @@ function init()  {
       self.currentLocation.coords.lat = location.lat();
       self.currentLocation.coords.lng = location.lng();
         
-      //pan to the new currentLocation
-      //self.pantoLocation();
-
       //reset search pattern for list of places
       self.searchPattern('');
 
