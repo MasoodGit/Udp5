@@ -68,8 +68,8 @@ function Neighbourhood()  {
   //list of places for a given location
   self.places = ko.observableArray();
 
-  //all places after applying the filtering
-  self.filteredPlacesList = ko.observableArray();
+
+  self.hasPlaces = ko.observable(false);
 
   // defaults to Bangalore
   self.currentLocation = {
@@ -213,6 +213,8 @@ function Neighbourhood()  {
         });
         self.places.push(place);
       });
+    
+    self.hasPlaces(true);
 
     //load all category icon images
     categoryIconArray.forEach(function(url){
@@ -298,6 +300,9 @@ function init()  {
   google.maps.event.addDomListener(autocompleteInputBox,'place_changed',function() {
       
     self.isLoading(true);
+    
+    self.hasPlaces(false);
+
     //clear existing places array
     self.places([]);
     var place = autocompleteInputBox.getPlace();

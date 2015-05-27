@@ -38,7 +38,7 @@
   </div>
 </div>
 <!-- list of venue for a given location / neighbourhood -->
-<div class="places">
+<div style="display:none" class="places" data-bind="visible: hasPlaces">
   <ul class="place-list places-place-list-scrollbar places-place-list-scrollbar-borderless" data-bind="foreach: places">
     <li data-bind="attr : { id: id } , visible : isMatched">
         <hr class="places-place-list-item-line">
