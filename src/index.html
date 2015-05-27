@@ -13,50 +13,62 @@
 <body>
 <!-- google map -->
 <div id="map"></div>
-<!-- messages-->
-<div class="message-bar">
-  <div  class="message-bar-loading-status" data-bind="visible: isLoading">
-    <span>Loading....</span>
+<div class="wrapper">
+  <!-- messages-->
+  <div class="message-bar clearfloat">
+    <div  class="message-bar-loading-status" data-bind="visible: isLoading">
+      <span>Loading....</span>
+    </div>
+    <div style="display:none" class="message-bar-error-message" data-bind="visible: isErrored">
+      <p data-bind="text: errorMessage"></p>
+    </div>
+    <div style="display:none" class="message-bar-search-result-message" data-bind="visible: places.length = 0">
+      <span>No places found around </span><span data-bind="text: currentLocation.name"></span>
+    </div>
   </div>
-  <div style="display:none" class="message-bar-error-message" data-bind="visible: isErrored">
-    <p data-bind="text: errorMessage"></p>
+  <!--search location-->
+  <div class="location-container col-width clearfloat">
+     <input class="location" type="text" id="autocomplete" 
+    data-bind="attr: { placeholder: 'Location: ' + currentLocation.name()}">
   </div>
-  <div style="display:none" class="message-bar-search-result-message" data-bind="visible: places.length = 0">
-    <span>No places found around </span><span data-bind="text: currentLocation.name"></span>
+   
+  <!--search bar to search the venues in the neighbourhood-->
+  <div class="search-places col-width clearfloat">
+    <input type="text" placeholder="Search for places" data-bind="textInput : searchPattern">
+    <div class="clear-search">
+    <a href="#" class="clear-search-anchor" data-bind="click: clearSearch">
+      <span> X </span>
+      </a>
+    </div>
   </div>
-</div>
-<!--search location-->
-  <input class="location" type="text" id="autocomplete" 
-  data-bind="attr: { placeholder: 'Location: ' + currentLocation.name()}">
-<!--search bar to search the venues in the neighbourhood-->
-<div class="search-places">
-  <input type="text" placeholder="Search for places" data-bind="textInput : searchPattern">
-  <div class="clear-search">
-  <a href="#" class="clear-search-anchor" data-bind="click: clearSearch">
-    <span> X </span>
-    </a>
-  </div>
-</div>
-<!-- list of venue for a given location / neighbourhood -->
-<div class="places">
-  <ul class="place-list places-place-list-scrollbar places-place-list-scrollbar-borderless" data-bind="foreach: places">
-    <li data-bind="attr : { id: id } , visible : isMatched">
-        <hr class="places-place-list-item-line">
-        <div class="places-place-list-item" data-bind="click: $root.showInfoWindow">
-          <!-- Details of the place -->
-          <div class="places-place-list-item-info">
-            <!-- name of the place -->
-            <h4 class="places-place-list-item-title" data-bind="text: name"></h4>
-            <!-- category the place belongs to -->
-            <h5 class="places-place-list-item-category" data-bind="visible: categories.length > 0, text : categoryName"></h5>
-            <!-- address of the place -->
-            <div class="places-place-list-item-address" data-bind="visible :location.formattedAddress.length > 0">
-              <span data-bind="text : location.formattedAddress.join(',')"></span>
+  <!-- list of venue for a given location / neighbourhood -->
+  <div class="places col-width clearfloat">
+    <ul class="place-list places-place-list-scrollbar places-place-list-scrollbar-borderless" data-bind="foreach: places">
+      <li data-bind="attr : { id: id } , visible : isMatched">
+          <hr class="places-place-list-item-line">
+          <div class="places-place-list-item" data-bind="click: $root.showInfoWindow">
+            <!-- Details of the place -->
+            <div class="places-place-list-item-info">
+              <!-- name of the place -->
+              <h4 class="places-place-list-item-title" data-bind="text: name"></h4>
+              <!-- category the place belongs to -->
+              <h5 class="places-place-list-item-category" data-bind="visible: categories.length > 0, text : categoryName"></h5>
+              <!-- address of the place -->
+              <div class="places-place-list-item-address" data-bind="visible :location.formattedAddress.length > 0">
+                <span data-bind="text : location.formattedAddress.join(',')"></span>
+              </div>
             </div>
           </div>
-        </div>
-    </li>
-  </ul>
+      </li>
+    </ul>
+  </div>
+  <hr class="hr-line col-width">
+  <div class="collapse-place-list col-width">
+      <span class="collapse-place-list-button">
+        "Click here to slide"
+      </span>
+  </div>
+  
 </div>
 
 <script type="text/template" data-template="infowindowTemplate">
@@ -92,5 +104,11 @@ src="js/lib/knockout.js"></script>
 <script type="text/javascript"  
 src="js/app.js"></script>
 <script src="js/lib/offline.min.js"></script> 
+<script>
+  $('.collapse-place-list').click(function(){
+    var $list = $('.places');
+    $list.slideToggle('slow');
+  });
+</script>
 </body>
 </html>

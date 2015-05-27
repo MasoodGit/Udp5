@@ -266,12 +266,12 @@ function init()  {
     zoomControl: true,
     zoomControlOptions: {
     position: google.maps.ControlPosition.RIGHT_BOTTOM,
-    style: google.maps.ZoomControlStyle.SMALL
+    style: google.maps.ZoomControlStyle.DEFAULT
     },
     mapTypeControl: true,
     mapTypeControlOptions: {
     style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-    position: google.maps.ControlPosition.RIGHT_BOTTOM
+    position: google.maps.ControlPosition.BOTTOM_CENTER
     },
   };
 
