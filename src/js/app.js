@@ -1,4 +1,4 @@
-//Function to the foursquare api
+//Function to call FourSquare Api endpoints
 function FoursquareAPI() {
 
   this.clientId = "4ZKYMPQ4P0S3NA2JW1ACCJV1IFWEOCEWMRPNQILFFX5VLBS2";
@@ -37,7 +37,8 @@ function FoursquareAPI() {
 } //end of FourSquareAPI
 
 
-// Neighbourhood ViewModel
+// Neighbourhood ViewModel, encapsulates the logic 
+// for the viewmodel
 function Neighbourhood()  {
   var self = this;
   var map;
@@ -47,7 +48,45 @@ function Neighbourhood()  {
   var autocompleteInputBox;
   var infoWindow;
   var categoryIconArray = [];
+  var mediaQueryList ;
       
+  //tracks the screen resolution anything above 600px
+  // is consider "high" for this app and UI changes 
+  // accordingly
+  self.resolution = ko.observable("high");
+
+  
+  self.slideDown = function() {
+    var $list = $('.places');
+    $list.slideDown('slow');
+  };
+
+  self.slideUp = function() {
+    var $list = $('.places');
+    $list.slideUp('slow');
+  };
+
+  self.slideToggle = function() {
+    var $list = $('.places');
+    $list.slideToggle('slow');
+  };
+
+  self.handleMediaChange = function (mediaQueryList) {
+    if(mediaQueryList.matches) {
+          // The browser window is at least 376px wide
+          console.log("<<<big>>>>// The browser window is at least 600px wide");
+          //no auto slideup
+          self.slideDown();
+          self.resolution("high");
+        }
+        else {
+          // The browser window is less than 376px wide
+          console.log("<<small>>>/ The browser window is less than 600px wide");
+          //auto slideup on click
+          self.slideUp();
+          self.resolution("lower");
+        }
+};
 
   //instantiate foursquareAPI
   self.foursquareAPI = new FoursquareAPI();
@@ -91,6 +130,7 @@ function Neighbourhood()  {
   //searching places at a Location
   self.clearSearch = function() {
     self.searchPattern("");
+    self.slideDown();
   };
 
   //displays infowindow, when a place is clicked 
@@ -99,6 +139,9 @@ function Neighbourhood()  {
     map.panTo(place.marker.position);
     infoWindow.setContent(self.getInfoWindowContent(place));
     infoWindow.open(map,place.marker);
+    if(self.resolution() == "lower") {
+      self.slideUp();
+    }
   };
 
   //creates the content that needs to 
@@ -225,6 +268,11 @@ function Neighbourhood()  {
       img.src = url;
     });
 
+
+    if(self.resolution() == "lower") {
+      self.slideUp();
+    }
+
     //remove the loading message
     self.isLoading(false);
 
@@ -255,7 +303,13 @@ self.errorHandler = function (error) {
 // initializes on load.
 function init()  {
 
-  infowindowDataTemplate = $('script[data-template="infowindowTemplate"]').html();
+  mediaQueryList = window.matchMedia("(min-width: 600px)");
+  mediaQueryList.addListener(self.handleMediaChange);
+  if(window.innerWidth <= 600) {
+      self.resolution("lower");
+  } else if(window.innerWidth > 600) {
+      self.resolution("high");
+  }
 
   //initial map options
   mapOptions = {
@@ -280,7 +334,7 @@ function init()  {
   //setup map 
   map = new google.maps.Map(document.getElementById("map"),mapOptions);
 
- //http://stackoverflow.com/questions/18444161/google-maps-responsive-resize
+  //http://stackoverflow.com/questions/18444161/google-maps-responsive-resize
   google.maps.event.addDomListener(window,"resize",function(){
     var center = map.getCenter();
     google.maps.event.trigger(map,"resize");
@@ -309,7 +363,7 @@ function init()  {
 
     if(place.geometry) {
       var location = place.geometry.location;
-        
+      
       //set the currentLocation
       self.currentLocation.name(place.name);
       self.currentLocation.coords.lat = location.lat();
@@ -337,10 +391,10 @@ function init()  {
 
 $(document).ready(function()  {
 
-  //instantiate the viewmodel
+  //instantiate the Neighbourhood viewmodel
   ko.applyBindings(new Neighbourhood());
 
-  //fetch google Roboto fonts
+  //Load google Roboto fonts
   WebFontConfig = {
     google: { families: [ 'Roboto:100,300,400:latin' ] }
   };

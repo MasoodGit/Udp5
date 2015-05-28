@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Udacity Neigbhourd Project</title>
+  <title>Udacity Neighbourhood Project</title>
   <meta charset="utf-8"> <!-- use utf-8 for display -->
   <meta http-equiv="X-UA-Comatible" content="IE=edge"> <!-- make IE use best engine -->
   <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- for mobile view -->
@@ -13,8 +13,10 @@
 <body>
 <!-- google map -->
 <div id="map"></div>
+<!--wrappers the ui elements on the page -->
 <div class="wrapper">
-  <!-- messages-->
+
+  <!-- messages are displayed here (loading status,error messages)-->
   <div class="message-bar clearfloat">
     <div  class="message-bar-loading-status" data-bind="visible: isLoading">
       <span>Loading....</span>
@@ -26,7 +28,8 @@
       <span>No places found around </span><span data-bind="text: currentLocation.name"></span>
     </div>
   </div>
-  <!--search location-->
+
+  <!--search for locations using google's autocomplete box-->
   <div class="location-container col-width clearfloat">
      <input class="location" type="text" id="autocomplete" 
     data-bind="attr: { placeholder: 'Location: ' + currentLocation.name()}">
@@ -34,13 +37,14 @@
    
   <!--search bar to search the venues in the neighbourhood-->
   <div class="search-places col-width clearfloat">
-    <input type="text" placeholder="Search for places" data-bind="textInput : searchPattern">
+    <input type="text" placeholder="Search for places" data-bind="textInput : searchPattern,click: slideDown">
     <div class="clear-search">
     <a href="#" class="clear-search-anchor" data-bind="click: clearSearch">
       <span> X </span>
       </a>
     </div>
   </div>
+
   <!-- list of venue for a given location / neighbourhood -->
   <div style="display:none" class="places col-width clearfloat" data-bind="visible: hasPlaces">
     <ul class="place-list places-place-list-scrollbar places-place-list-scrollbar-borderless" data-bind="foreach: places">
@@ -64,37 +68,12 @@
   </div>
   
   <hr class="hr-line col-width" data-bind="visible: hasPlaces">
-  <div class="collapse-place-list col-width" data-bind="visible: hasPlaces">
+  <div class="collapse-place-list col-width" data-bind="visible: hasPlaces, click: slideToggle">
       <span class="collapse-place-list-button">
-        "Click here to slide"
+        "Click to slide"
       </span>
   </div>
-  
 </div>
-
-<script type="text/template" data-template="infowindowTemplate">
-  <div class="venueBlock">
-  <div class="venueIcon">
-    <img class="icon" src="{{placeCategoryIcon}}">
-  </div>
-  <div class="venueDetails">
-    <div class="venueName">
-      <h2>{{placeName}}</h2>
-    </div>
-  <div class="venueScore" style="background:{{ratingColor}};">{{rating}}</div>
-  <div class="venueAddressData">
-    <div class="venueAddress">
-    {{placeAddress}}
-    </div>
-      <div class="venueData">
-        <span class="venueDataItem">
-          <span class="categoryName">{{placeCategoryName}}</span>
-        </span>
-      </div>
-    </div>
-  </div>
-</div>
-</script>
 
 <script 
 src="js/lib/jquery.min.js"></script>
@@ -105,49 +84,5 @@ src="js/lib/knockout.js"></script>
 <script type="text/javascript"  
 src="js/app.js"></script>
 <script src="js/lib/offline.min.js"></script> 
-<script>
-  $('.collapse-place-list').click(function(){
-    var $list = $('.places');
-    $list.slideToggle('slow');
-  });
- 
-  var slideToggle = function() {
-    var $list = $('.places');
-    $list.slideToggle('slow');
-  };
-
-  var slideUp = function() {
-    var $list = $('.places');
-    $list.slideUp('slow');
-  }
-
-  var slideDown = function() {
-    var $list = $('.places');
-    $list.slideDown('slow');
-  };
-
-  var handleMediaChange = function(mediaQueryList) {
-    if(mediaQueryList.matches) {
-      // The browser window is at least 376px wide
-      console.log("<<<big>>>>// The browser window is at least 600px wide");
-      //no auto slideup
-      slideDown();
-      $('places-place-list-item').removeClass("slide");
-
-
-    }
-    else {
-      // The browser window is less than 376px wide
-      console.log("<<small>>>/ The browser window is less than 600px wide");
-      //auto slideup on click
-      slideUp();
-      $('places-place-list-item').addClass("slide");
-
-    }
-  };
-  var mql = window.matchMedia("(min-width: 600px)");
-  mql.addListener(handleMediaChange);
-
-</script>
 </body>
 </html>
