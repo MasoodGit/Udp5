@@ -63,8 +63,8 @@
     </ul>
   </div>
   
-  <hr class="hr-line col-width">
-  <div class="collapse-place-list col-width">
+  <hr class="hr-line col-width" data-bind="visible: hasPlaces">
+  <div class="collapse-place-list col-width" data-bind="visible: hasPlaces">
       <span class="collapse-place-list-button">
         "Click here to slide"
       </span>
@@ -110,6 +110,44 @@ src="js/app.js"></script>
     var $list = $('.places');
     $list.slideToggle('slow');
   });
+ 
+  var slideToggle = function() {
+    var $list = $('.places');
+    $list.slideToggle('slow');
+  };
+
+  var slideUp = function() {
+    var $list = $('.places');
+    $list.slideUp('slow');
+  }
+
+  var slideDown = function() {
+    var $list = $('.places');
+    $list.slideDown('slow');
+  };
+
+  var handleMediaChange = function(mediaQueryList) {
+    if(mediaQueryList.matches) {
+      // The browser window is at least 376px wide
+      console.log("<<<big>>>>// The browser window is at least 600px wide");
+      //no auto slideup
+      slideDown();
+      $('places-place-list-item').removeClass("slide");
+
+
+    }
+    else {
+      // The browser window is less than 376px wide
+      console.log("<<small>>>/ The browser window is less than 600px wide");
+      //auto slideup on click
+      slideUp();
+      $('places-place-list-item').addClass("slide");
+
+    }
+  };
+  var mql = window.matchMedia("(min-width: 600px)");
+  mql.addListener(handleMediaChange);
+
 </script>
 </body>
 </html>
