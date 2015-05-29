@@ -62,7 +62,7 @@ function Neighbourhood()  {
     }else {
       $responsiveContainer.fadeOut();
     }
-  }
+  };
 
   self.hidePlaceList = function() {
     $(".responsive-container").fadeOut();
@@ -85,6 +85,17 @@ function Neighbourhood()  {
   self.slideToggle = function() {
     var $list = $('.places');
     $list.slideToggle('slow');
+
+    var $collapseButton = $('.collapse-place-list');
+    var $spanArrow = $collapseButton.find('span');
+    if($spanArrow.get(0).className == 'down-arrow') {
+      $spanArrow.removeClass('down-arrow');
+      $spanArrow.addClass('up-arrow');
+    } else {
+      $spanArrow.removeClass('up-arrow');
+      $spanArrow.addClass('down-arrow');
+    }
+
   };
 
   self.handleMediaChange = function (mediaQueryList) {
