@@ -1,5 +1,5 @@
 # Front End Nanodegree Neighbourhood Project
-This is a single plage application featuring map of a neighbourhood and
+This is a single page application featuring map of a neighbourhood and
 lets us explore places in this location.
 we can find out the address and rating of the place.
 
