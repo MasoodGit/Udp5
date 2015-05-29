@@ -89,15 +89,7 @@ a : hover {
   min-width:250px;
 }
 
-@media (min-width: 376px) {
-  .col-width {
-    width: 312px;
-  }  
-}
 
-@media(min-width: 600px) {
-
-}
 
 .message-bar {
   width: 100%;
@@ -148,6 +140,8 @@ a : hover {
 .location-container {
   margin-top: 5px;
   margin-bottom: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border-radius: 2px 0 0 2px;
 }
 
 .location {
@@ -156,10 +150,11 @@ a : hover {
   padding: 0 12px 0 12px;
   background-color: #fff;
   border: 1px solid transparent;
-  border-radius: 2px 0 0 2px;
+  /*border-radius: 2px 0 0 2px;*/
   outline: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  /*box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);*/
   font-size: 15px;
+  float:left;
 }
 
 .location:focus {
@@ -167,24 +162,28 @@ a : hover {
 }
 
 .responsive-button {
-  padding : 2px 5px;
-  width: 20px;
-  height: 25px;
-  background-color: #4d90fe;
-  border-radius: 4px;
+  padding: 2px 5px;
+  width: 35px;
+  height: 35px;
+  background-color: #fff;
+  outline: none;
+  /*border-radius: 2px 0 0 2px;*/
+  /*box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);*/
+  border: 0;
+  float:left;
 }
 
 .responsive-button .button-bar {
-  width: 20px;
-  height: 3px;
-  background: #fff;
-  margin: 3px 0px;
-  display:block;
+  width: 25px;
+  height: 2px;
+  background-color: #999;
+  margin: 3px 0;
+  display: block;
 }
 
-.responsive-button:hover {
+.responsive-button: hover > .button-bar {
    
-   backgroud:#333;
+   background-color: #333;
 }
 
 .search-places {
@@ -444,4 +443,22 @@ hr {
   margin:0;
 }
 
+
+
+@media (min-width: 376px) {
+  .col-width {
+    width: 312px;
+  }
+  .location {
+    width: 88%;
+    margin-left: 0;
+  }
 }
+
+@media(min-width: 600px) {
+ .location {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+

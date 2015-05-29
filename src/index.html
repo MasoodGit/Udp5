@@ -31,13 +31,12 @@
 
   <!--search for locations using google's autocomplete box-->
   <div class="location-container col-width clearfloat">
-    <div>
-      <button class="responsive-button" data-bind="visible: (resolution() == 'lower'),click: togglePlaceListVisibility">
+   
+      <button class="responsive-button" data-bind="visible: (resolution() == 'lower'), click: togglePlaceListVisibility">
         <span class="button-bar"></span>
         <span class="button-bar"></span>
         <span class="button-bar"></span>
       </button>
-    </div>
      <input class="location" type="text" id="autocomplete" 
     data-bind="attr: { placeholder: 'Location: ' + currentLocation.name()}">
   </div>
