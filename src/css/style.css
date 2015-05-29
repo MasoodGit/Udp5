@@ -78,6 +78,10 @@ a : hover {
   padding-right: 15px;
 }
 
+.show {
+  display: block;
+}
+
 .col-width {
   position:relative;
   min-height: 1px;
@@ -160,6 +164,27 @@ a : hover {
 
 .location:focus {
   border-color: #4d90fe;
+}
+
+.responsive-button {
+  padding : 2px 5px;
+  width: 20px;
+  height: 25px;
+  background-color: #4d90fe;
+  border-radius: 4px;
+}
+
+.responsive-button .button-bar {
+  width: 20px;
+  height: 3px;
+  background: #fff;
+  margin: 3px 0px;
+  display:block;
+}
+
+.responsive-button:hover {
+   
+   backgroud:#333;
 }
 
 .search-places {

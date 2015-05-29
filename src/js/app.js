@@ -50,12 +50,28 @@ function Neighbourhood()  {
   var categoryIconArray = [];
   var mediaQueryList ;
       
-  //tracks the screen resolution anything above 600px
+  // tracks the screen resolution anything above 600px
   // is consider "high" for this app and UI changes 
   // accordingly
   self.resolution = ko.observable("high");
 
-  
+  self.togglePlaceListVisibility = function() {
+    var $responsiveContainer = $('.responsive-container');
+    if($responsiveContainer.css('display') == 'none') {
+      $responsiveContainer.fadeIn();
+    }else {
+      $responsiveContainer.fadeOut();
+    }
+  }
+
+  self.hidePlaceList = function() {
+    $(".responsive-container").fadeOut();
+  };
+
+  self.showPlaceList = function() {
+    $(".responsive-container").fadeIn();
+  };
+
   self.slideDown = function() {
     var $list = $('.places');
     $list.slideDown('slow');
@@ -73,20 +89,16 @@ function Neighbourhood()  {
 
   self.handleMediaChange = function (mediaQueryList) {
     if(mediaQueryList.matches) {
-          // The browser window is at least 376px wide
-          console.log("<<<big>>>>// The browser window is at least 600px wide");
-          //no auto slideup
-          self.slideDown();
-          self.resolution("high");
-        }
-        else {
-          // The browser window is less than 376px wide
-          console.log("<<small>>>/ The browser window is less than 600px wide");
-          //auto slideup on click
-          self.slideUp();
-          self.resolution("lower");
-        }
-};
+      // The browser window is at least 376px wide
+      self.showPlaceList();
+      self.resolution("high");
+    }
+    else {
+      // The browser window is less than 600px wide
+      self.hidePlaceList();
+      self.resolution("lower");
+    }
+  };
 
   //instantiate foursquareAPI
   self.foursquareAPI = new FoursquareAPI();
@@ -140,7 +152,7 @@ function Neighbourhood()  {
     infoWindow.setContent(self.getInfoWindowContent(place));
     infoWindow.open(map,place.marker);
     if(self.resolution() == "lower") {
-      self.slideUp();
+      self.hidePlaceList();
     }
   };
 
@@ -267,11 +279,6 @@ function Neighbourhood()  {
       };
       img.src = url;
     });
-
-
-    if(self.resolution() == "lower") {
-      self.slideUp();
-    }
 
     //remove the loading message
     self.isLoading(false);

@@ -31,10 +31,18 @@
 
   <!--search for locations using google's autocomplete box-->
   <div class="location-container col-width clearfloat">
+    <div>
+      <button class="responsive-button" data-bind="visible: (resolution() == 'lower'),click: togglePlaceListVisibility">
+        <span class="button-bar"></span>
+        <span class="button-bar"></span>
+        <span class="button-bar"></span>
+      </button>
+    </div>
      <input class="location" type="text" id="autocomplete" 
     data-bind="attr: { placeholder: 'Location: ' + currentLocation.name()}">
   </div>
    
+  <div class="responsive-container">
   <!--search bar to search the venues in the neighbourhood-->
   <div class="search-places col-width clearfloat">
     <input type="text" placeholder="Search for places" data-bind="textInput : searchPattern,click: slideDown">
@@ -74,7 +82,7 @@
       </span>
   </div>
 </div>
-
+</div>
 <script 
 src="js/lib/jquery.min.js"></script>
 <script type="text/javascript" 
